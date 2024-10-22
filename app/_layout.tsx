@@ -4,13 +4,27 @@ import { PaperProvider } from 'react-native-paper';
 import { StatusBar as ExpoStatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import Theme from '../colors';
+import {
+  useFonts,
+  PlusJakartaSans_700Bold,
+  PlusJakartaSans_400Regular,
+} from '@expo-google-fonts/plus-jakarta-sans';
+import Theme from '../theme';
 
 const { height } = Dimensions.get('window');
 
 export default function Layout() {
+  const [fontsLoaded] = useFonts({
+    PlusJakartaSans_400Regular,
+    PlusJakartaSans_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
-    <PaperProvider>
+    <PaperProvider theme={Theme}>
       <ExpoStatusBar style="light" />
       <SafeAreaView className="flex-1">
         <LinearGradient

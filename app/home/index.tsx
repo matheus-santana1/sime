@@ -1,14 +1,17 @@
 import { Button } from 'react-native-paper';
 import { Image } from 'expo-image';
 import { View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { StyleSheet, Dimensions } from 'react-native';
 import Wave from 'react-native-waves';
 import logo from '../../assets/sime_logo.png';
-import Theme from '../../colors';
+import Theme from '../../theme';
 
 const { width, height } = Dimensions.get('window');
 
 export default function Home() {
+  const router = useRouter();
+
   return (
     <>
       <Wave gap={20} speed={8} maxPoints={12} delta={40} height={height / 8} />
@@ -17,9 +20,15 @@ export default function Home() {
         <Button
           textColor={Theme.colors.wave}
           buttonColor={Theme.colors.white}
+          labelStyle={{
+            lineHeight: 55,
+            paddingVertical: 15,
+            fontSize: 55,
+            fontFamily: 'PlusJakartaSans_700Bold',
+            height: 80,
+          }}
           mode="elevated"
-          labelStyle={{ fontSize: 30, minHeight: 50, textAlignVertical: 'center', paddingTop: 15 }}
-          onPress={() => console.log('Navegar ate pagina de intro')}>
+          onPress={() => router.push('/intro')}>
           INICIAR
         </Button>
       </View>
