@@ -1,4 +1,8 @@
-import { DefaultTheme } from 'react-native-paper';
+import { DefaultTheme, configureFonts } from 'react-native-paper';
+
+const fontConfig = {
+  fontFamily: 'PlusJakartaSans_400Regular',
+};
 
 const Theme = {
   ...DefaultTheme,
@@ -13,6 +17,7 @@ const Theme = {
     black: '#000000',
     error: '#e74c3c',
   },
+  fonts: configureFonts({ config: fontConfig }),
 };
 
 export default Theme;
