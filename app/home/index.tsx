@@ -13,6 +13,7 @@ const { width, height } = Dimensions.get('window');
 export default function Home() {
   const router = useRouter();
   const [animate, setAnimate] = useState(false);
+  const [buttonZIndex, setButtonZIndex] = useState(6);
 
   const handleAnimationComplete = () => {
     console.log('Animação concluiu');
@@ -21,38 +22,43 @@ export default function Home() {
 
   return (
     <>
+      <View className="flex-1 items-center justify-center gap-20">
+        <Image style={styles.image} source={logo} contentFit="contain" />
+        <Button
+          style={{ position: 'relative', zIndex: buttonZIndex }}
+          textColor={Theme.colors.wave}
+          buttonColor={Theme.colors.white}
+          labelStyle={{
+            lineHeight: 50,
+            fontSize: 30,
+            fontFamily: 'PlusJakartaSans_700Bold',
+            height: 60,
+          }}
+          mode="elevated"
+          onPress={() => {
+            setAnimate(true);
+            setButtonZIndex(1);
+          }}>
+          INICIAR
+        </Button>
+      </View>
       <Wave
         gap={20}
         speed={8}
         maxPoints={12}
         delta={40}
-        height={height / 8}
+        height={height / 1.5}
         shouldAnimate={animate}
         onAnimationComplete={handleAnimationComplete}
       />
-      <View className="flex-1 items-center justify-center gap-20">
-        <Image style={styles.image} source={logo} contentFit="contain" />
-        <Button
-          textColor={Theme.colors.wave}
-          buttonColor={Theme.colors.white}
-          labelStyle={{
-            lineHeight: 55,
-            paddingVertical: 15,
-            fontSize: 55,
-            fontFamily: 'PlusJakartaSans_700Bold',
-            height: 80,
-          }}
-          mode="elevated"
-          onPress={() => setAnimate(true)}>
-          INICIAR
-        </Button>
-      </View>
     </>
   );
 }
+
+const image_width = width * 0.7;
 const styles = StyleSheet.create({
   image: {
-    width: width,
-    height: width,
+    width: image_width,
+    height: 769 * (image_width / 652),
   },
 });
