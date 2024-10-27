@@ -1,19 +1,18 @@
 import { Button } from 'react-native-paper';
 import { Image } from 'expo-image';
-import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { StyleSheet, Dimensions } from 'react-native';
 import Wave from 'react-native-waves';
 import logo from '../../assets/sime_logo.png';
 import Theme from '../../theme';
 import { useState } from 'react';
-
-const { width, height } = Dimensions.get('window');
+import Animated from 'react-native-reanimated';
+import { BounceInUp, Easing } from 'react-native-reanimated';
 
 export default function Home() {
   const router = useRouter();
   const [animate, setAnimate] = useState(false);
-  const [buttonZIndex, setButtonZIndex] = useState(6);
+  const [buttonZIndex, setButtonZIndex] = useState(3);
 
   const handleAnimationComplete = () => {
     console.log('Animação concluiu');
@@ -22,17 +21,19 @@ export default function Home() {
 
   return (
     <>
-      <View className="flex-1 items-center justify-center gap-20">
+      <Animated.View
+        entering={BounceInUp.duration(600).easing(Easing.inOut(Easing.cubic))}
+        className="flex-1 items-center justify-center gap-20"
+        style={{ zIndex: buttonZIndex }}>
         <Image style={styles.image} source={logo} contentFit="contain" />
         <Button
-          style={{ position: 'relative', zIndex: buttonZIndex }}
+          style={{ position: 'relative' }}
           textColor={Theme.colors.wave}
-          buttonColor={Theme.colors.white}
           labelStyle={{
             lineHeight: 50,
             fontSize: 30,
             fontFamily: 'PlusJakartaSans_700Bold',
-            height: 60,
+            height: 55,
           }}
           mode="elevated"
           onPress={() => {
@@ -41,7 +42,7 @@ export default function Home() {
           }}>
           INICIAR
         </Button>
-      </View>
+      </Animated.View>
       <Wave
         gap={20}
         speed={8}
@@ -55,6 +56,7 @@ export default function Home() {
   );
 }
 
+const { width, height } = Dimensions.get('window');
 const image_width = width * 0.7;
 const styles = StyleSheet.create({
   image: {

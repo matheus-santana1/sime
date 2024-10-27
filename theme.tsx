@@ -8,14 +8,9 @@ const Theme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#7257ff',
-    accent: '#',
-    background: '#3498db',
-    text: '#',
+    primary: '#000000',
+    initGradient: '#3498db',
     wave: '#005c99',
-    white: '#ffffff',
-    black: '#000000',
-    error: '#e74c3c',
   },
   fonts: configureFonts({ config: fontConfig }),
 };
