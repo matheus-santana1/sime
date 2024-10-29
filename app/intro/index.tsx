@@ -2,27 +2,52 @@ import { StyleSheet, Dimensions, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ListRenderItemInfo } from 'react-native';
+import { useEffect } from 'react';
 import { Image } from 'expo-image';
 import { BlurView } from 'expo-blur';
+import { useRouter } from 'expo-router';
 import { Shadow } from 'react-native-shadow-2';
 import AppIntroSlider from 'react-native-app-intro-slider';
 import { SlideItem, slides } from './slides';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withDelay,
+  SlideInUp,
+} from 'react-native-reanimated';
 import Theme from 'theme';
 
 export default function Intro() {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
+  const opacity = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+    };
+  });
+
+  useEffect(() => {
+    opacity.value = withDelay(400, withTiming(1, { duration: 400 }));
+  }, []);
 
   const renderSlide = ({ item }: ListRenderItemInfo<SlideItem>) => {
     return (
       <>
-        <Shadow offset={[0, -insets.top]} distance={20}>
-          <Image
-            source={item.image}
-            contentFit="contain"
-            style={[styles.image, { top: -insets.top }]}
-          />
-        </Shadow>
-        <View className="flex-1 items-center mb-20 relative" style={{ top: -insets.top + 30 }}>
+        <Animated.View entering={SlideInUp.duration(400)}>
+          <Shadow offset={[0, -insets.top]} distance={20}>
+            <Image
+              source={item.image}
+              contentFit="contain"
+              style={[styles.image, { top: -insets.top }]}
+            />
+          </Shadow>
+        </Animated.View>
+        <Animated.View
+          className="flex-1 items-center mb-20 relative"
+          style={[{ top: -insets.top + 30, opacity }, animatedStyle]}>
           <Text
             style={{ fontFamily: 'PlusJakartaSans_700Bold' }}
             className="text-3xl text-white text-center">
@@ -35,12 +60,13 @@ export default function Intro() {
             mode="elevated"
             className="w-1/2"
             labelStyle={{ fontSize: 20 }}
+            disabled={item.disable_button}
             onPress={() => {
-              console.log('Selecionar');
+              router.navigate('application');
             }}>
-            SELECIONAR
+            {item.button_text}
           </Button>
-        </View>
+        </Animated.View>
       </>
     );
   };

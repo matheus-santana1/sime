@@ -30,7 +30,8 @@
     "react-native-screens": "3.31.1",
     "react-native-shadow-2": "^7.1.0",
     "react-native-waves": "^1.2.5",
-    "expo-navigation-bar": "~3.0.7"
+    "expo-navigation-bar": "~3.0.7",
+    "react-native-svg": "15.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

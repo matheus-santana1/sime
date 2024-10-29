@@ -15,7 +15,6 @@ export default function Home() {
   const [buttonZIndex, setButtonZIndex] = useState(3);
 
   const handleAnimationComplete = () => {
-    console.log('Animação concluiu');
     router.navigate('intro');
   };
 
@@ -39,6 +38,7 @@ export default function Home() {
           onPress={() => {
             setAnimate(true);
             setButtonZIndex(1);
+            setTimeout(handleAnimationComplete, 420);
           }}>
           INICIAR
         </Button>
@@ -50,7 +50,6 @@ export default function Home() {
         delta={40}
         height={height / 1.5}
         shouldAnimate={animate}
-        onAnimationComplete={handleAnimationComplete}
       />
     </>
   );
