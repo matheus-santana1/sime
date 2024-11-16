@@ -1,9 +1,10 @@
-import Svg, { SvgProps, Path } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
+import SvgProps from './props';
 
 const Graph = (props: SvgProps) => (
-  <Svg width={40} height={40} fill="none" {...props}>
+  <Svg width={props.size} height={props.size} fill="none" {...props}>
     <Path
-      stroke="#fff"
+      stroke={props.color}
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={3.333}

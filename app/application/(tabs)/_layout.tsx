@@ -1,30 +1,30 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Tabs } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Tabs, useRouter } from 'expo-router';
+import { TabBar } from '../components/TabBar';
+import { View, StatusBar } from 'react-native';
+import { IconButton } from 'react-native-paper';
+import Theme from 'theme';
 
 export default function TabLayout() {
+  const insets = useSafeAreaInsets();
+  const router = useRouter();
+
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: 'blue' }}>
-      <Tabs.Screen
-        name="graph/index"
-        options={{
-          title: 'Gráfico',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="data/index"
-        options={{
-          title: 'Dados',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="map/index"
-        options={{
-          title: 'Mapa',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="cog" color={color} />,
-        }}
-      />
-    </Tabs>
+    <View className="relative flex-1">
+      <View className="absolute z-[1]" style={{ top: StatusBar.currentHeight || 0 || insets.top }}>
+        <IconButton
+          className="m-0"
+          icon="arrow-left-circle"
+          iconColor={Theme.colors.wave}
+          onPress={() => router.navigate('intro')}
+          size={35}
+        />
+      </View>
+      <Tabs tabBar={(props) => <TabBar {...props} />} initialRouteName="graph/index">
+        <Tabs.Screen name="graph/index" options={{ title: 'Gráfico', headerShown: false }} />
+        <Tabs.Screen name="data/index" options={{ title: 'Dados', headerShown: false }} />
+        <Tabs.Screen name="map/index" options={{ title: 'Mapa', headerShown: false }} />
+      </Tabs>
+    </View>
   );
 }

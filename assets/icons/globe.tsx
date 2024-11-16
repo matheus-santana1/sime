@@ -1,12 +1,13 @@
-import Svg, { SvgProps, G, Path } from 'react-native-svg';
+import Svg, { G, Path } from 'react-native-svg';
+import SvgProps from './props';
 
 const Globe = (props: SvgProps) => (
-  <Svg width={40} height={40} fill="none" {...props}>
-    <G fill="#fff" opacity={0.12}>
+  <Svg width={props.size} height={props.size} fill="none" {...props}>
+    <G fill={props.color} opacity={0.12}>
       <Path d="M28.333 20C31.667 16.667 35 13.682 35 10a6.667 6.667 0 1 0-13.333 0c0 3.682 3.333 6.667 6.666 10ZM17.5 36.48v-3.672c0-.199.072-.391.2-.542l4.144-4.834a.833.833 0 0 0-.22-1.265l-4.76-2.72a.834.834 0 0 1-.31-.311l-3.103-5.438a.833.833 0 0 0-.798-.417l-9.213.82c-.07.623-.107 1.257-.107 1.899 0 8.355 6.148 15.274 14.167 16.48Z" />
     </G>
     <Path
-      stroke="#fff"
+      stroke={props.color}
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={3.333}

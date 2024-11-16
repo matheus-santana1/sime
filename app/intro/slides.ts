@@ -12,16 +12,16 @@ export interface SlideItem {
 export const slides = [
   {
     key: '1',
-    title: 'RIO ITABIRITO',
-    text: 'O Rio Itabirito, situado em Minas Gerais, é um importante afluente do Rio São Francisco. Com suas águas cristalinas e paisagens deslumbrantes, o Itabirito é uma atração para os amantes da natureza e do ecoturismo. Sua bacia hidrográfica abriga uma rica biodiversidade, incluindo diversas espécies de fauna e flora nativas.',
-    image: rio_1,
+    title: 'RIO DE SIMEVILLE',
+    text: 'Simeville, uma pequena cidade, cortada por um rio que atravessa suas áreas residenciais e comerciais, tem enfrentado problemas de alagamento devido às mudanças climáticas. Para ajudar a prevenir esses transtornos, a empresa FLP Automação desenvolveu o aplicativo SIME, que monitora o nível do rio através de um circuito eletrônico, alertando para possíveis enchentes.',
+    image: rio_2,
     button_text: 'Selecionar',
   },
   {
     key: '2',
-    title: 'RIO SÃO FRANCISCO',
-    text: 'O Rio São Francisco, conhecido como "Velho Chico", é um dos mais icônicos do Brasil, percorrendo mais de 3.000 km e atravessando cinco estados. Ele é uma fonte essencial de água, energia e transporte, além de ser vital para a agricultura e a pesca na região.',
-    image: rio_2,
+    title: 'RIO ITABIRITO',
+    text: 'O Rio Itabirito, situado em Minas Gerais, é um importante afluente do Rio São Francisco. Com suas águas cristalinas e paisagens deslumbrantes, o Itabirito é uma atração para os amantes da natureza e do ecoturismo. Sua bacia hidrográfica abriga uma rica biodiversidade, incluindo diversas espécies de fauna e flora nativas.',
+    image: rio_1,
     button_text: 'Em breve...',
     disable_button: true,
   },

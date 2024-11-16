@@ -1,17 +1,10 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { Text } from 'react-native';
+import ViewGradient from 'app/application/components/ViewGradient';
 
-export default function Tab() {
+export default function Data() {
   return (
-    <View style={styles.container}>
+    <ViewGradient>
       <Text>Mapa</Text>
-    </View>
+    </ViewGradient>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

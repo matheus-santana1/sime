@@ -1,9 +1,10 @@
-import Svg, { SvgProps, Path } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
+import SvgProps from './props';
 
 const Water = (props: SvgProps) => (
-  <Svg width={34} height={36} fill="none" {...props}>
+  <Svg width={(props.size as number) * (17 / 18)} height={props.size} fill="none" {...props}>
     <Path
-      stroke="#fff"
+      stroke={props.color}
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={3.333}
