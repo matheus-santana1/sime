@@ -2,7 +2,7 @@ import { Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 
-export const saveImageToFile = async (base64Image: any) => {
+const saveImageToFile = async (base64Image: any) => {
   try {
     const base64Data = base64Image.replace(/^data:image\/\w+;base64,/, '');
     const fileUri = `${FileSystem.cacheDirectory}imagem_salva.png`;
@@ -18,3 +18,5 @@ export const saveImageToFile = async (base64Image: any) => {
     Alert.alert('Erro ao salvar', error.message);
   }
 };
+
+export default saveImageToFile;

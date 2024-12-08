@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import React, { useEffect } from 'react';
 import Globe from 'assets/icons/globe';
 import Graph from 'assets/icons/graph';

@@ -9,7 +9,7 @@ export interface SlideItem {
   disable_button?: boolean;
 }
 
-export const slides = [
+const slides = [
   {
     key: '1',
     title: 'RIO DE SIMEVILLE',
@@ -26,3 +26,5 @@ export const slides = [
     disable_button: true,
   },
 ];
+
+export default slides;

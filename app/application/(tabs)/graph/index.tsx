@@ -3,6 +3,7 @@ import Graph, { ChartHandle } from '../../components/Graph';
 import ViewGradient from 'app/application/components/ViewGradient';
 import { useRef } from 'react';
 import GraphOptions from 'app/application/components/GraphOptions';
+import Box from 'app/application/components/Box';
 
 let xLabel = 'Horas';
 let yLabel = 'Metros';
@@ -23,6 +24,7 @@ export default function Data() {
           initialDataY={initialDataY}
           height={Dimensions.get('window').height * 0.6}
         />
+        <Box />
         <GraphOptions graphRef={chartRef} />
       </View>
     </ViewGradient>

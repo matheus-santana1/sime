@@ -7,7 +7,7 @@ export interface defaultOptionProps {
   initialDataX: string[];
 }
 
-export const DEFAULT_OPTION = (params: defaultOptionProps) => {
+const DEFAULT_OPTION = (params: defaultOptionProps) => {
   return {
     backgroundColor: Theme.graph.backgroundColor,
     textStyle: {
@@ -85,3 +85,5 @@ export const DEFAULT_OPTION = (params: defaultOptionProps) => {
     ],
   };
 };
+
+export default DEFAULT_OPTION;

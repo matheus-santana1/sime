@@ -8,7 +8,7 @@ export default function ViewGradient({ children }: { children?: ReactNode }) {
   const insets = useSafeAreaInsets();
   return (
     <View
-      style={[styles.container, { paddingTop: 40 + (StatusBar.currentHeight || 0 || insets.top) }]}>
+      style={[styles.container, { paddingTop: 50 + (StatusBar.currentHeight || 0 || insets.top) }]}>
       <LinearGradient
         className="absolute inset-x-0 top-0"
         style={{ height: height + (StatusBar.currentHeight || 0) + getNavigationBarHeight() }}

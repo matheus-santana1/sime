@@ -1,6 +1,6 @@
-import { DEFAULT_OPTION, defaultOptionProps } from './options';
+import DEFAULT_OPTION, { defaultOptionProps } from './options';
 import React, { useRef, useImperativeHandle, forwardRef, useState } from 'react';
-import { saveImageToFile } from './saveImageToFile';
+import saveImageToFile from './saveImageToFile';
 import { Dimensions } from 'react-native';
 import RNEChartsPro from 'react-native-echarts-pro';
 
@@ -83,8 +83,6 @@ const Chart = forwardRef(function Chart(
       option={options}
       webViewSettings={{
         overScrollMode: 'never',
-        androidHardwareAccelerationDisabled: false,
-        scrollEnabled: false,
       }}
     />
   );

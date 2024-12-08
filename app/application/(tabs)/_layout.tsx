@@ -1,9 +1,10 @@
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Tabs, useRouter } from 'expo-router';
-import { TabBar } from '../components/TabBar';
+import TabBar from '../components/TabBar';
 import { View, StatusBar } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import Theme from 'theme';
+import Status from '../components/Status';
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
@@ -11,14 +12,17 @@ export default function TabLayout() {
 
   return (
     <View className="relative flex-1">
-      <View className="absolute z-[1]" style={{ top: StatusBar.currentHeight || 0 || insets.top }}>
+      <View
+        className="absolute z-[1] flex-row justify-between w-full items-center"
+        style={{ top: StatusBar.currentHeight || 0 || insets.top }}>
         <IconButton
           className="m-0"
           icon="arrow-left-circle"
           iconColor={Theme.colors.wave}
           onPress={() => router.navigate('intro')}
-          size={35}
+          size={42}
         />
+        <Status />
       </View>
       <Tabs tabBar={(props) => <TabBar {...props} />} initialRouteName="graph/index">
         <Tabs.Screen name="graph/index" options={{ title: 'Gráfico', headerShown: false }} />

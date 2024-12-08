@@ -45,7 +45,7 @@ const Button = (props: ButtonProps) => {
 
   const backgroundButton = animation.interpolate({
     inputRange: [0, 1],
-    outputRange: [Theme.graph.buttonColor, Theme.graph.on],
+    outputRange: [Theme.graph.buttonColor, Theme.colors.wave],
   });
 
   return (
@@ -58,7 +58,11 @@ const Button = (props: ButtonProps) => {
       <Animated.View
         style={{ backgroundColor: backgroundButton, transform: [{ scale: scaleValue }] }}
         className="flex-1 items-center justify-center p-3 rounded-lg">
-        <Icon source={props.icon} color={Theme.colors.wave} size={props.size} />
+        <Icon
+          source={props.icon}
+          color={isSwitchOn ? '#ffffff' : Theme.colors.wave}
+          size={props.size}
+        />
       </Animated.View>
     </Pressable>
   );
