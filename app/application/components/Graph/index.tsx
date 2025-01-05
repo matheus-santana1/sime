@@ -1,10 +1,11 @@
-import DEFAULT_OPTION, { defaultOptionProps } from './options';
-import React, { useRef, useImperativeHandle, forwardRef, useState } from 'react';
+import React, { useRef, useImperativeHandle, forwardRef, useState, useEffect } from 'react';
 import saveImageToFile from './saveImageToFile';
 import { Dimensions } from 'react-native';
 import RNEChartsPro from 'react-native-echarts-pro';
+import { useSystem } from 'WebSocket';
+import { produce } from 'immer';
 
-interface ChartProps extends defaultOptionProps {
+interface ChartProps {
   padding?: number;
   height?: number;
 }
@@ -14,15 +15,19 @@ export interface ChartHandle {
   takeScreenshot: () => void;
   updateChart: (values: { x: string; y: number }) => void;
   zoom: () => void;
+  updateOptions: (options: object) => void;
 }
 
-const Chart = forwardRef(function Chart(
-  { padding = 0, xLabel, yLabel, initialDataY, initialDataX, height }: ChartProps,
-  ref
-) {
-  const options = DEFAULT_OPTION({ xLabel, yLabel, initialDataY, initialDataX });
+const Chart = forwardRef(function Chart({ padding = 0, height }: ChartProps, ref) {
   const [zoomState, setZoomState] = useState<boolean>(true);
+  const [clonedChartOptions, setClonedChartOptions] = useState<any>(null);
   const echartsRef = useRef<any>(null);
+  const { chartOptions, setSystem } = useSystem();
+
+  useEffect(() => {
+    const clonedOptions = { ...chartOptions };
+    setClonedChartOptions(clonedOptions);
+  }, []);
 
   function zoom() {
     if (echartsRef.current) {
@@ -57,10 +62,22 @@ const Chart = forwardRef(function Chart(
 
   function updateChart(values: { x: string; y: number }) {
     if (values && echartsRef.current) {
-      options.series[0].data.shift();
-      options.series[0].data.push(values.y);
-      options.xAxis[0].data.shift();
-      options.xAxis[0].data.push(values.x);
+      const updated = produce(chartOptions, (draft: any) => {
+        draft.series[0].data.shift();
+        draft.series[0].data.push(values.y);
+        draft.xAxis[0].data.shift();
+        draft.xAxis[0].data.push(values.x);
+      });
+      setSystem({ chartOptions: updated });
+      echartsRef.current.setNewOption(updated);
+      echartsRef.current.getInstance('dispatchAction', {
+        type: 'hideTip',
+      });
+    }
+  }
+
+  function updateOptions(options: object) {
+    if (options && echartsRef.current) {
       echartsRef.current.setNewOption(options);
       echartsRef.current.getInstance('dispatchAction', {
         type: 'hideTip',
@@ -73,6 +90,7 @@ const Chart = forwardRef(function Chart(
     takeScreenshot: takeScreenshot,
     updateChart: updateChart,
     zoom: zoom,
+    updateOptions: updateOptions,
   }));
 
   return (
@@ -80,7 +98,7 @@ const Chart = forwardRef(function Chart(
       ref={echartsRef}
       height={height}
       width={Dimensions.get('window').width - padding}
-      option={options}
+      option={clonedChartOptions}
       webViewSettings={{
         overScrollMode: 'never',
       }}

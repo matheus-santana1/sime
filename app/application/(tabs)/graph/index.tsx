@@ -1,29 +1,25 @@
 import { View, Dimensions } from 'react-native';
-import Graph, { ChartHandle } from '../../components/Graph';
+import React, { Suspense, useEffect } from 'react';
 import ViewGradient from 'app/application/components/ViewGradient';
-import { useRef } from 'react';
 import GraphOptions from 'app/application/components/GraphOptions';
 import Box from 'app/application/components/Box';
+import { ActivityIndicator } from 'react-native';
+import { useSystem } from 'WebSocket';
 
-let xLabel = 'Horas';
-let yLabel = 'Metros';
-let initialDataY = [26, 14, 7, 11, 28, 5, 22];
-let initialDataX = ['15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30'];
+const Graph = React.lazy(() => import('../../components/Graph'));
+const height = Dimensions.get('window').height * 0.6;
 
 export default function Data() {
-  const chartRef = useRef<ChartHandle>(null);
+  const { chartRef } = useSystem();
+
   return (
     <ViewGradient>
-      <View className="flex-1 justify-between">
-        <Graph
-          ref={chartRef}
-          padding={10}
-          xLabel={xLabel}
-          yLabel={yLabel}
-          initialDataX={initialDataX}
-          initialDataY={initialDataY}
-          height={Dimensions.get('window').height * 0.6}
-        />
+      <View className="flex-1 justify-between w-full">
+        <View className="w-full justify-center items-center" style={{ height: height }}>
+          <Suspense fallback={<ActivityIndicator size={'large'} />}>
+            <Graph ref={chartRef} padding={10} height={height} />
+          </Suspense>
+        </View>
         <Box />
         <GraphOptions graphRef={chartRef} />
       </View>

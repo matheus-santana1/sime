@@ -17,6 +17,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import Theme from 'theme';
 import { moderateScale } from 'react-native-size-matters';
+import React from 'react';
 
 export default function Intro() {
   const router = useRouter();
@@ -76,7 +77,7 @@ export default function Intro() {
             labelStyle={{ fontSize: 20 }}
             disabled={item.disable_button}
             onPress={() => {
-              router.navigate('application');
+              router.push({ pathname: 'application', params: { urlWebsocket: item.urlWebsocket } });
             }}>
             {item.button_text}
           </Button>

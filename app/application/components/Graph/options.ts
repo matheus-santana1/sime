@@ -18,7 +18,7 @@ const DEFAULT_OPTION = (params: defaultOptionProps) => {
       axisPointer: {
         type: 'none',
       },
-      formatter: '<b>Nível</b>: {c}m<br>Às {b}h',
+      formatter: '<b>Nível</b>: {c}m<br>Às {b}s',
     },
     grid: {
       top: 30,
@@ -48,6 +48,9 @@ const DEFAULT_OPTION = (params: defaultOptionProps) => {
         nameLocation: 'center',
         nameGap: 23,
         data: params.initialDataX,
+        axisLabel: {
+          fontSize: 10,
+        },
         axisLine: {
           lineStyle: {
             color: Theme.graph.axisLineColor,
