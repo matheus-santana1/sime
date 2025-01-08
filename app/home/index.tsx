@@ -8,6 +8,7 @@ import Theme from '../../theme';
 import { useState } from 'react';
 import Animated from 'react-native-reanimated';
 import { BounceInUp, Easing } from 'react-native-reanimated';
+import React from 'react';
 
 export default function Home() {
   const router = useRouter();

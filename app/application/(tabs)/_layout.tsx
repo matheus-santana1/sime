@@ -56,7 +56,7 @@ export default function TabLayout() {
 
   function onMessageAction(data: MessagePayload) {
     if ('conectado' in data) {
-      setSystem({ conectado: true, isPlaying: false });
+      setSystem({ conectado: true, isPlaying: true });
     }
     if ('prevNiveis' in data) {
       const now = moment();
@@ -66,7 +66,7 @@ export default function TabLayout() {
           now
             .clone()
             .subtract(i * 10, 'minutes')
-            .format('HH:mm')
+            .format('HH:mm:ss')
         );
       }
       const graphOptions = {
@@ -84,9 +84,12 @@ export default function TabLayout() {
       setSystem({ prevNiveis: graphOptions });
     }
     if (data.nivel !== undefined && data.nivel !== null) {
-      const horaAtual = moment().format('HH:mm');
+      const horaAtual = moment().format('HH:mm:ss');
       chartRef?.current?.updateChart({ x: horaAtual, y: data.nivel });
       setSystem({ nivelAtual: data.nivel, horaAtual });
+    }
+    if (data.variacao !== undefined && data.variacao !== null) {
+      setSystem({ variacao: data.variacao });
     }
   }
 }

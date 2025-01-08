@@ -18,7 +18,7 @@ const DEFAULT_OPTION = (params: defaultOptionProps) => {
       axisPointer: {
         type: 'none',
       },
-      formatter: '<b>Nível</b>: {c}m<br>Às {b}s',
+      formatter: '<b>Nível</b>: {c}m<br>Às {b}.',
     },
     grid: {
       top: 30,

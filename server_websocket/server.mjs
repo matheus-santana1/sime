@@ -12,6 +12,9 @@ function gerarDados() {
     nivel: (Math.random() * 30).toFixed(2),
   };
 }
+let flag = 0;
+let min = 0;
+let max = 0;
 
 wss.on('connection', function connection(ws) {
   console.log('Novo cliente conectado!');
@@ -27,7 +30,21 @@ wss.on('connection', function connection(ws) {
         // Inicia o envio de dados se não estiver ativo
         if (!intervalId) {
           intervalId = setInterval(() => {
-            ws.send(JSON.stringify(gerarDados()));
+            const dados = gerarDados();
+            if (flag == 0) {
+              min = dados.nivel;
+            }
+            ws.send(JSON.stringify(dados));
+            flag++;
+            if (flag == 10) {
+              max = dados.nivel;
+              ws.send(
+                JSON.stringify({
+                  variacao: min - max,
+                })
+              );
+              flag = 0;
+            }
           }, 1000); // Envia dados a cada 1 segundo
           console.log('Envio de dados iniciado.');
         }

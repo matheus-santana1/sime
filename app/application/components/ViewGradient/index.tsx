@@ -1,14 +1,24 @@
-import { View, StyleSheet, Dimensions, StatusBar, Platform } from 'react-native';
+import { View, StyleSheet, Dimensions, StatusBar, Platform, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ReactNode } from 'react';
 import { LinearGradient } from 'expo-linear-gradient';
 import Theme from 'theme';
 
-export default function ViewGradient({ children }: { children?: ReactNode }) {
+export default function ViewGradient({
+  children,
+  style,
+}: {
+  children?: ReactNode;
+  style?: ViewStyle | ViewStyle[];
+}) {
   const insets = useSafeAreaInsets();
   return (
     <View
-      style={[styles.container, { paddingTop: 50 + (StatusBar.currentHeight || 0 || insets.top) }]}>
+      style={StyleSheet.flatten([
+        styles.container,
+        { paddingTop: 50 + (StatusBar.currentHeight || 0 || insets.top) },
+        style,
+      ])}>
       <LinearGradient
         className="absolute inset-x-0 top-0"
         style={{ height: height + (StatusBar.currentHeight || 0) + getNavigationBarHeight() }}

@@ -14,6 +14,7 @@ export interface MessagePayload {
   prevNiveis?: number[];
   nivel?: number;
   acao?: 'play' | 'pause';
+  variacao?: number;
 }
 type SendJsonMessage = (jsonMessage: MessagePayload, keep?: boolean) => void;
 
@@ -27,6 +28,8 @@ export type SystemState = {
   isPlaying: boolean;
   nivelAtual: number;
   horaAtual: string;
+  variacao: number;
+  risco: 'ALTO' | 'MÉDIO' | 'BAIXO';
   sendMessage: SendJsonMessage;
   conectar: () => void;
   desconectar: () => void;
@@ -39,6 +42,8 @@ export type SystemState = {
     prevNiveis?: any;
     nivelAtual?: number;
     horaAtual?: string;
+    variacao?: number;
+    risco?: 'ALTO' | 'MEDIO' | 'BAIXO';
   }) => void;
 };
 
@@ -50,8 +55,10 @@ export const useSystem = create<SystemState>((set, get) => ({
   conectado: false,
   conectando: false,
   isPlaying: false,
-  nivelAtual: 0,
+  nivelAtual: 10,
   horaAtual: '0',
+  variacao: 10,
+  risco: 'BAIXO',
   sendMessage: () => {},
   conectar: () => {
     const { defaultUrl } = get();
@@ -95,5 +102,22 @@ export const useSystem = create<SystemState>((set, get) => ({
     if ('horaAtual' in value) {
       set({ horaAtual: value.horaAtual });
     }
+    if ('variacao' in value) {
+      set({ variacao: value.variacao });
+      if ((value.variacao as number) > 5) {
+        set({ risco: 'ALTO' });
+      } else if ((value.variacao as number) >= 2) {
+        set({ risco: 'MÉDIO' });
+      } else {
+        set({ risco: 'BAIXO' });
+      }
+    }
   },
 }));
+
+export const parseDotToComma = (value: any) => {
+  if (typeof value === 'string') {
+    return value.replace(/\./g, ',');
+  }
+  return value.toString().replace(/\./g, ',');
+};

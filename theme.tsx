@@ -21,6 +21,8 @@ const Theme = {
     splitLineColor: '#ffffff',
     buttonColor: '#d1d5db',
     on: '#32a852',
+    off: 'red',
+    yellow: 'yellow',
   },
   fonts: configureFonts({ config: fontConfig }),
 };

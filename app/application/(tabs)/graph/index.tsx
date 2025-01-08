@@ -1,5 +1,5 @@
 import { View, Dimensions } from 'react-native';
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense } from 'react';
 import ViewGradient from 'app/application/components/ViewGradient';
 import GraphOptions from 'app/application/components/GraphOptions';
 import Box from 'app/application/components/Box';
