@@ -1,219 +1,154 @@
 import {
   Dimensions,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableOpacityProps,
   View,
+  StatusBar,
+  FlatList,
+  TouchableOpacity,
+  LayoutChangeEvent,
 } from 'react-native';
+import { Image } from 'expo-image';
+import { moderateScale, moderateVerticalScale } from 'react-native-size-matters';
+import { Text } from 'react-native-paper';
+import ViewGradient from 'app/application/components/ViewGradient';
+import Theme from 'theme';
+import Animated, {
+  BounceInDown,
+  BounceIn,
+  Easing,
+  BounceInUp,
+  BounceOut,
+} from 'react-native-reanimated';
+import { useNavigationState } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-view';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import MapIcon from 'assets/icons/MapIcon';
+import slides, { MapaItem } from '../../../intro/slides';
 import { useState } from 'react';
-import { AnimatedRollingNumber } from 'react-native-animated-rolling-numbers';
-import { Easing } from 'react-native-reanimated';
 
-interface ButtonProps extends TouchableOpacityProps {
-  variant?: 'primary' | 'secondary';
-  title?: string;
-  onPress?: () => void;
-}
-const Button: React.FC<ButtonProps> = ({ title, onPress, variant = 'primary', ...rest }) => {
-  const { style, ...props } = rest;
-  return (
-    <TouchableOpacity
-      style={[
-        styles.button,
-        {
-          backgroundColor: variant === 'primary' ? '#2077E0' : 'white',
-          borderWidth: 1,
-          borderColor: variant === 'primary' ? 'white' : '#2077E0',
-        },
-        style,
-      ]}
-      onPress={onPress}
-      {...props}>
-      <Text
-        style={[
-          styles.buttonText,
-          {
-            color: variant === 'primary' ? 'white' : '#2077E0',
-          },
-        ]}>
-        {title}
-      </Text>
-    </TouchableOpacity>
-  );
-};
+const originalWidth = 3024;
+const originalHeight = 4032;
 
-export default function App() {
-  const [count, setCount] = useState(142347);
-  const [showMinusSign, setShowMinusSign] = useState(true);
-  const [showPlusSign, setShowPlusSign] = useState(false);
-  const [useGrouping, setUseGrouping] = useState(false);
-  const [enableCompactNotation, setEnableCompactNotation] = useState(false);
-  const [compactToFixed, setCompactToFixed] = useState(1);
-  const [toFixed, setToFixed] = useState(2);
-  const [fixedOnlyForCompact, setFixedOnlyForCompact] = useState(true);
-  const [locale, setLocale] = useState('de-DE');
+export default function Mapa() {
+  const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
+  const [selectedItem, setSelectedItem] = useState<null | number>(null);
+  const [pins, setPins] = useState<{ x: number; y: number }[] | null>([]);
+
+  const handlePress = (item: MapaItem) => {
+    setSelectedItem(item.id === selectedItem ? null : item.id);
+    setPins(item.id === selectedItem ? null : item.positionPin);
+  };
+
+  const navigationState = useNavigationState((state) => state);
+  const screenKey = navigationState?.routes[navigationState.index]?.key;
+  const insets = useSafeAreaInsets();
+  //const route = useRoute();
+  //const { key }: any = route.params;
+  const key = 1;
+
+  const handleLayout = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+    setImageDimensions({ width, height });
+  };
+
+  const calculatePinPosition = (value: { x: number; y: number }) => {
+    const scaleX = imageDimensions.width / originalWidth;
+    const scaleY = imageDimensions.height / originalHeight;
+    const pinX = value.x * scaleX;
+    const pinY = value.y * scaleY;
+    return { x: pinX, y: pinY, scaleY };
+  };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView
-        style={{ width: Dimensions.get('screen').width }}
-        contentContainerStyle={styles.contentContainer}>
-        <View style={{ flexDirection: 'row' }}>
-          <Button variant="secondary" title="-3461997.234" onPress={() => setCount(-3461997.234)} />
-          <Button variant="secondary" title="+3461997.234" onPress={() => setCount(3461997.234)} />
-        </View>
-        <View style={{ flexDirection: 'row' }}>
-          <Button
-            variant="secondary"
-            title=" + "
-            onPress={() => setCount(count + Math.round(Math.random() * count))}
-            style={{ minWidth: 100 }}
-          />
-          <Button
-            variant="secondary"
-            title=" - "
-            onPress={() => setCount(count - Math.round(Math.random() * count))}
-            style={{ minWidth: 100 }}
-          />
-        </View>
-        <AnimatedRollingNumber
-          containerStyle={styles.numberContainer}
-          value={count}
-          toFixed={toFixed}
-          useGrouping={useGrouping}
-          locale={locale}
-          // formattedText={customFormatCompactNumber(count)}
-          enableCompactNotation={enableCompactNotation}
-          compactToFixed={compactToFixed}
-          fixedOnlyForCompact={fixedOnlyForCompact}
-          showPlusSign={showPlusSign}
-          showMinusSign={showMinusSign}
-          spinningAnimationConfig={{ duration: 500, easing: Easing.bounce }}
-          textStyle={styles.textStyle}
-          // (optional)  using the font-variant to avoid layout jumping when the number is updated
-          numberStyle={{
-            fontVariant: ['tabular-nums'],
+    <ViewGradient>
+      <View
+        style={{
+          height: Dimensions.get('screen').height,
+          top: (StatusBar.currentHeight || 0 || insets.top) + 52,
+        }}
+        className="flex absolute w-full">
+        <Animated.View key={screenKey + 1} style={{ flex: 1 }} entering={BounceInUp.duration(1000)}>
+          <ReactNativeZoomableView
+            maxZoom={2}
+            minZoom={1}
+            zoomStep={0.5}
+            initialZoom={1}
+            bindToBorders={true}>
+            <Image
+              onLayout={handleLayout}
+              className="flex-1 w-full"
+              source={require('../../../../assets/simeville.png')}
+              contentFit="contain"
+            />
+            <View className="flex-1 w-full h-full absolute">
+              {pins?.map((pin, index) => {
+                let position = calculatePinPosition({ x: pin.x, y: pin.y });
+                return (
+                  <Animated.View
+                    key={Math.random()}
+                    entering={BounceIn.duration(500).easing(Easing.inOut(Easing.quad))}
+                    exiting={BounceOut.duration(200).easing(Easing.inOut(Easing.quad))}
+                    collapsable={false}
+                    style={{
+                      left: position.x,
+                      top: position.y,
+                      position: 'absolute',
+                    }}>
+                    <FontAwesome
+                      key={index}
+                      name="map-marker"
+                      color="red"
+                      size={position.scaleY * 250}
+                    />
+                  </Animated.View>
+                );
+              })}
+            </View>
+          </ReactNativeZoomableView>
+        </Animated.View>
+        <Animated.View
+          key={screenKey}
+          entering={BounceInDown.duration(800)}
+          style={{
+            height: moderateVerticalScale(350),
+            backgroundColor: Theme.colors.wave,
+            paddingBottom: moderateVerticalScale(250, 0.2),
+            top: -1,
           }}
-        />
-        <Text style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 24 }}>
-          Props Enabled / Disabled
-        </Text>
-        <View style={{ flexDirection: 'row' }}>
-          <Button
-            variant={showMinusSign ? 'primary' : 'secondary'}
-            title="Show -"
-            onPress={() => setShowMinusSign(!showMinusSign)}
-            style={{ minWidth: 100 }}
-          />
-          <Button
-            variant={showPlusSign ? 'primary' : 'secondary'}
-            title="Show +"
-            onPress={() => setShowPlusSign(!showPlusSign)}
-            style={{ minWidth: 100 }}
-          />
-          <Button
-            variant={useGrouping ? 'primary' : 'secondary'}
-            title="useGrouping"
-            onPress={() => setUseGrouping(!useGrouping)}
-            style={{ minWidth: 100 }}
-          />
-        </View>
-        <Button
-          variant={enableCompactNotation ? 'primary' : 'secondary'}
-          title="Enable Compact Notation"
-          onPress={() => setEnableCompactNotation(!enableCompactNotation)}
-          style={{ minWidth: 100 }}
-        />
-        <Button
-          variant={fixedOnlyForCompact ? 'primary' : 'secondary'}
-          title="Fixed Only For Compact"
-          onPress={() => setFixedOnlyForCompact(!fixedOnlyForCompact)}
-          style={{ minWidth: 100 }}
-        />
-        <Button
-          variant={enableCompactNotation ? 'primary' : 'secondary'}
-          disabled={!enableCompactNotation}
-          title={`Increase Compact toFixed : ${compactToFixed}`}
-          onPress={() => setCompactToFixed(Math.max(compactToFixed + 1, 0))}
-          style={{ minWidth: 100 }}
-        />
-        <Button
-          variant={!enableCompactNotation ? 'secondary' : 'primary'}
-          disabled={!enableCompactNotation}
-          title={`Decrease Compact toFixed : ${compactToFixed}`}
-          onPress={() => setCompactToFixed(Math.max(compactToFixed - 1, 0))}
-          style={{ minWidth: 100 }}
-        />
-        <Button
-          variant={!enableCompactNotation ? 'primary' : 'secondary'}
-          disabled={enableCompactNotation}
-          title={`Increase toFixed : ${toFixed}`}
-          onPress={() => setToFixed(Math.max(toFixed + 1, 0))}
-          style={{ minWidth: 100 }}
-        />
-        <Button
-          variant={!enableCompactNotation ? 'primary' : 'secondary'}
-          disabled={enableCompactNotation}
-          title={`Decrease toFixed : ${toFixed}`}
-          onPress={() => setToFixed(Math.max(toFixed - 1, 0))}
-          style={{ minWidth: 100 }}
-        />
-        <View style={{ flexDirection: 'row' }}>
-          <Button
-            variant={locale === 'en-US' ? 'primary' : 'secondary'}
-            title="locale en-US"
-            onPress={() => setLocale('en-US')}
-          />
-          <Button
-            variant={locale === 'de-DE' ? 'primary' : 'secondary'}
-            title="locale de-DE"
-            onPress={() => setLocale('de-DE')}
-          />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          className="flex w-full rounded-2xl px-5 pt-2">
+          <Text className="text-white text-center" style={{ fontSize: moderateScale(25) }}>
+            Mapa
+          </Text>
+          <View style={{ height: 1 }} className="bg-white w-full mt-2"></View>
+          <View className="bg-white w-full h-full mt-3 p-3">
+            <FlatList
+              data={slides[key - 1].mapa as any}
+              keyExtractor={(item) => item.id}
+              renderItem={({ item }) => {
+                const isSelected = selectedItem === item.id;
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.4}
+                    onPress={() => handlePress(item)}
+                    className="flex-1 items-center flex-row rounded-lg"
+                    style={{
+                      backgroundColor: isSelected ? '#929599' : '#d1d5db',
+                      height: moderateVerticalScale(30),
+                      margin: moderateVerticalScale(4),
+                      paddingHorizontal: moderateScale(10),
+                      gap: moderateScale(10),
+                    }}>
+                    <MapIcon name={item.nameIcon} size={moderateVerticalScale(20)} color="black" />
+                    <Text className="text-black" style={{ fontSize: moderateScale(12) }}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+          </View>
+        </Animated.View>
+      </View>
+    </ViewGradient>
   );
 }
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 100,
-  },
-  contentContainer: {
-    flexGrow: 1,
-    alignItems: 'center',
-    width: Dimensions.get('screen').width,
-  },
-  button: {
-    backgroundColor: '#2077E0',
-    borderRadius: 10,
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 5,
-  },
-  buttonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  textStyle: {
-    color: 'black',
-    fontWeight: 'bold',
-    paddingHorizontal: 1,
-    fontSize: 28,
-    fontFamily: 'PlusJakartaSans_700Bold',
-  },
-  numberContainer: {
-    backgroundColor: 'rgba(0,0,0,0.2)',
-    borderRadius: 10,
-    padding: 32,
-    marginVertical: 24,
-  },
-});

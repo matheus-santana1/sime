@@ -13,8 +13,7 @@ import moment from 'moment';
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  //const { urlWebsocket } = useLocalSearchParams();
-  const urlWebsocket = '192.168.0.13:8080';
+  const { urlWebsocket, key } = useLocalSearchParams();
 
   const { url, setSystem, desconectar, conectar, chartRef } = useSystem();
   const socketOptions: Options = {
@@ -46,10 +45,14 @@ export default function TabLayout() {
         />
         <Status />
       </View>
-      <Tabs tabBar={(props) => <TabBar {...props} />} initialRouteName="data/index">
+      <Tabs tabBar={(props) => <TabBar {...props} />} initialRouteName="map/index">
         <Tabs.Screen name="graph/index" options={{ title: 'Gráfico', headerShown: false }} />
         <Tabs.Screen name="data/index" options={{ title: 'Dados', headerShown: false }} />
-        <Tabs.Screen name="map/index" options={{ title: 'Mapa', headerShown: false }} />
+        <Tabs.Screen
+          name="map/index"
+          options={{ title: 'Mapa', headerShown: false }}
+          initialParams={{ key }}
+        />
       </Tabs>
     </View>
   );

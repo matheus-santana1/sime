@@ -77,7 +77,10 @@ export default function Intro() {
             labelStyle={{ fontSize: 20 }}
             disabled={item.disable_button}
             onPress={() => {
-              router.push({ pathname: 'application', params: { urlWebsocket: item.urlWebsocket } });
+              router.push({
+                pathname: 'application',
+                params: { urlWebsocket: item.urlWebsocket, key: item.key },
+              });
             }}>
             {item.button_text}
           </Button>

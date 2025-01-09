@@ -9,7 +9,7 @@ import { useSystem } from 'WebSocket';
 const Graph = React.lazy(() => import('../../components/Graph'));
 const height = Dimensions.get('window').height * 0.6;
 
-export default function Data() {
+export default function Grafico() {
   const { chartRef } = useSystem();
 
   return (
