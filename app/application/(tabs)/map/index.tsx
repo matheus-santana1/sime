@@ -97,7 +97,7 @@ export default function Mapa() {
                     <FontAwesome
                       key={index}
                       name="map-marker"
-                      color="red"
+                      color={Theme.graph.off}
                       size={position.scaleY * 250}
                     />
                   </Animated.View>
@@ -132,14 +132,14 @@ export default function Mapa() {
                     onPress={() => handlePress(item)}
                     className="flex-1 items-center flex-row rounded-lg"
                     style={{
-                      backgroundColor: isSelected ? '#929599' : '#d1d5db',
+                      backgroundColor: isSelected ? Theme.colors.wave : '#d1d5db',
                       height: moderateVerticalScale(30),
                       margin: moderateVerticalScale(4),
                       paddingHorizontal: moderateScale(10),
                       gap: moderateScale(10),
                     }}>
-                    <MapIcon name={item.nameIcon} size={moderateVerticalScale(20)} color="black" />
-                    <Text className="text-black" style={{ fontSize: moderateScale(12) }}>
+                    <MapIcon name={item.nameIcon} size={moderateVerticalScale(20)} color={isSelected ? 'white' : 'black'} />
+                    <Text style={{ fontSize: moderateScale(12), color: isSelected ? 'white' : 'black' }}>
                       {item.name}
                     </Text>
                   </TouchableOpacity>

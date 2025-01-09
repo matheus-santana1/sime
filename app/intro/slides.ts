@@ -29,8 +29,8 @@ const slides: SlideItem[] = [
     text: 'Simeville, uma pequena cidade, cortada por um rio que atravessa suas áreas residenciais e comerciais, tem enfrentado problemas de alagamento devido às mudanças climáticas. Para ajudar a prevenir esses transtornos, a empresa FLP Automação desenvolveu o aplicativo SIME, que monitora o nível do rio através de um circuito eletrônico, alertando para possíveis enchentes.',
     image: rio_2,
     button_text: 'Selecionar',
-    //urlWebsocket: '192.168.4.1:8080',
-    urlWebsocket: '192.168.0.13:8080',
+    urlWebsocket: '192.168.4.1:8080',
+    //urlWebsocket: '192.168.0.13:8080',
     mapa: [
       {
         name: 'Rio Simeville',

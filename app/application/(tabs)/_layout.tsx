@@ -37,7 +37,7 @@ export default function TabLayout() {
         className="absolute z-[1] flex-row justify-between w-full items-center"
         style={{ top: StatusBar.currentHeight || 0 || insets.top }}>
         <IconButton
-          className="m-0"
+          className="m-0 absolute z-10"
           icon="arrow-left-circle"
           iconColor={Theme.colors.wave}
           onPress={() => router.navigate('intro')}
@@ -45,7 +45,7 @@ export default function TabLayout() {
         />
         <Status />
       </View>
-      <Tabs tabBar={(props) => <TabBar {...props} />} initialRouteName="map/index">
+      <Tabs tabBar={(props) => <TabBar {...props} />} initialRouteName="data/index">
         <Tabs.Screen name="graph/index" options={{ title: 'Gráfico', headerShown: false }} />
         <Tabs.Screen name="data/index" options={{ title: 'Dados', headerShown: false }} />
         <Tabs.Screen

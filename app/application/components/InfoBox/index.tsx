@@ -27,9 +27,9 @@ export default function Box() {
             style={{
               fontSize: moderateScale(20),
               color:
-                risco == 'ALTO'
+                risco == 'IMINENTE'
                   ? Theme.graph.off
-                  : risco == 'MÉDIO'
+                  : risco == 'PROVÁVEL'
                     ? Theme.graph.yellow
                     : Theme.graph.on,
             }}>

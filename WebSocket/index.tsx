@@ -29,7 +29,7 @@ export type SystemState = {
   nivelAtual: number;
   horaAtual: string;
   variacao: number;
-  risco: 'ALTO' | 'MÉDIO' | 'BAIXO';
+  risco: 'IMINENTE' | 'PROVÁVEL' | 'BAIXO';
   sendMessage: SendJsonMessage;
   conectar: () => void;
   desconectar: () => void;
@@ -43,7 +43,7 @@ export type SystemState = {
     nivelAtual?: number;
     horaAtual?: string;
     variacao?: number;
-    risco?: 'ALTO' | 'MEDIO' | 'BAIXO';
+    risco?: 'IMINENTE' | 'PROVÁVEL' | 'BAIXO';
   }) => void;
 };
 
@@ -98,19 +98,19 @@ export const useSystem = create<SystemState>((set, get) => ({
     }
     if ('nivelAtual' in value) {
       set({ nivelAtual: value.nivelAtual });
+      if ((value.nivelAtual as number) > 4.5) {
+        set({ risco: 'IMINENTE' });
+      } else if ((value.nivelAtual as number) >= 3) {
+        set({ risco: 'PROVÁVEL' });
+      } else {
+        set({ risco: 'BAIXO' });
+      }
     }
     if ('horaAtual' in value) {
       set({ horaAtual: value.horaAtual });
     }
     if ('variacao' in value) {
       set({ variacao: value.variacao });
-      if ((value.variacao as number) > 5) {
-        set({ risco: 'ALTO' });
-      } else if ((value.variacao as number) >= 2) {
-        set({ risco: 'MÉDIO' });
-      } else {
-        set({ risco: 'BAIXO' });
-      }
     }
   },
 }));
