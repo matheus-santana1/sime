@@ -24,7 +24,8 @@ import { ReactNativeZoomableView } from '@openspacelabs/react-native-zoomable-vi
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import MapIcon from 'assets/icons/MapIcon';
 import slides, { MapaItem } from '../../../intro/slides';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigation } from 'expo-router';
 
 const originalWidth = 3024;
 const originalHeight = 4032;
@@ -33,6 +34,15 @@ export default function Mapa() {
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
   const [selectedItem, setSelectedItem] = useState<null | number>(null);
   const [pins, setPins] = useState<{ x: number; y: number }[] | null>([]);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('blur', () => {
+      setSelectedItem(null);
+      setPins([]);
+    });
+    return () => unsubscribe();
+  }, [navigation]);
 
   const handlePress = (item: MapaItem) => {
     setSelectedItem(item.id === selectedItem ? null : item.id);
@@ -78,7 +88,7 @@ export default function Mapa() {
               onLayout={handleLayout}
               className="flex-1 w-full"
               source={require('../../../../assets/simeville.png')}
-              contentFit="contain"
+              contentFit="fill"
             />
             <View className="flex-1 w-full h-full absolute">
               {pins?.map((pin, index) => {

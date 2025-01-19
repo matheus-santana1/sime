@@ -18,7 +18,7 @@ export default function Box() {
     <>
       <View
         className="flex h-16 w-full rounded-2xl justify-center"
-        style={{ backgroundColor: Theme.colors.wave, marginTop: moderateScale(15) }}>
+        style={{ backgroundColor: Theme.colors.wave, marginTop: moderateScale(2) }}>
         <View className="flex-row flex-1 items-center justify-center">
           <Text className=" text-white" style={{ fontSize: moderateScale(20) }}>
             Risco de enchentes:&nbsp;

@@ -62,6 +62,7 @@ export const useSystem = create<SystemState>((set, get) => ({
   sendMessage: () => {},
   conectar: () => {
     const { defaultUrl } = get();
+    
     set({ url: defaultUrl, conectando: true });
   },
   desconectar: () => {

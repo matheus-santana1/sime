@@ -1,8 +1,10 @@
 import { View, Linking, Alert } from 'react-native';
-import { Button } from 'react-native-paper';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { Button, Text } from 'react-native-paper';
 import { useSystem } from 'WebSocket';
 import React from 'react';
 import Theme from 'theme';
+import { moderateScale } from 'react-native-size-matters';
 
 const callNumber = (phoneNumber: number) => {
   const url = `tel:${phoneNumber}`;
@@ -31,12 +33,15 @@ export default function Status() {
   return (
     <View className="flex w-full flex-row justify-end px-3">
       <Button
-        className="mr-4"
+        style={{marginRight: moderateScale(5)}}
         mode="contained"
         buttonColor={Theme.graph.off}
         textColor={Theme.graph.splitLineColor}
         onPress={() => callNumber(199)}>
-        Emergência
+        <View style={{gap: moderateScale(7)}} className='flex-row items-center justify-center'>
+          <Ionicons name="call" size={18} color="white"/>
+          <Text className='text-white'>Emergência</Text>
+        </View>
       </Button>
       <Button
         loading={conectando}

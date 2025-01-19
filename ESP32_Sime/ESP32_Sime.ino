@@ -12,12 +12,13 @@
 #define HIGH_LED 14
 #define MIDDLE_LED 10
 #define MIN_DISTANCE 2 //em cm
-#define MAX_DISTANCE 12.0 //em cm
+#define MAX_DISTANCE 10 ///em cm
 #define UPDATE_THRESHOLD 1 //em cm
 #define SSID "SIME"
 #define PASSWORD "testpassword"
 constexpr unsigned long PERIOD_NIV = 1000; // minutos * segundos * milisegundos
 constexpr unsigned long PERIOD_PREV = 10 * 60 * 1000; // minutos * segundos * milisegundos
+constexpr unsigned long PERIOD_VARIACAO = 10 * 1000; // segundos * milisegundos
 
 //---Cores---
 #define BRIGHTNESS 255
@@ -30,6 +31,7 @@ constexpr uint32_t LED_COLORS[] = {
 };
 
 //---Pinos---
+#define LED_ESP 2
 #define LED_PIN 5
 #define TRIG_PIN 16
 #define ECHO_PIN 15
@@ -41,16 +43,17 @@ TaskHandle_t WiFiTask;
 TaskHandle_t BuzzerTaskHandle;
 TaskHandle_t PrevNiveisTaskHandle;
 TaskHandle_t SendNivelTaskHandle;
+TaskHandle_t VariacaoTaskHandle;
 
 //---Variáveis Globais---
 CRGB led[NUM_LEDS];
 DNSServer dnsServer;
 WebSocketsServer webSocket = WebSocketsServer(8080);
 std::vector<int> ids;
+std::vector<float> prevNiveis(7, 0.0f);
 const byte DNS_PORT = 53;
-int prevNiveis[7] = {0};
-int flagNiveis = 6;
-float distancia = 0;
+float distancia = MAX_DISTANCE;
+float lastDistance = 0;
 
 ArduinoJson::JsonDocument doc;
 String json;
@@ -101,6 +104,21 @@ void setBuzzerIntermittent(void *pvParameters){
   }
 }
 
+void sendVariacao(void *pvParameters){
+  while (true){
+    doc.clear();
+    float variacao = (MAX_DISTANCE - distancia) - lastDistance;
+    doc["variacao"] = variacao;
+    buildJson();
+    Serial.printf("Variação: %f\n", variacao);
+    for (int id : ids) {
+      webSocket.sendTXT(id, json);
+    }
+    lastDistance = MAX_DISTANCE - distancia;
+    vTaskDelay(pdMS_TO_TICKS(PERIOD_VARIACAO));
+  }
+}
+
 void disableBuzzer(){
   digitalWrite(BUZZER_PIN, HIGH);
 }
@@ -121,11 +139,18 @@ float getDistancia(){
 
 void updatePrevNiveis(void *pvParameters){
   while (true){
-    prevNiveis[flagNiveis] = MAX_DISTANCE - distancia;
-    flagNiveis--;
-    if(flagNiveis < 0){
-      flagNiveis = 6;
+    prevNiveis.push_back(MAX_DISTANCE - distancia);
+    if (prevNiveis.size() > 7) {
+      prevNiveis.erase(prevNiveis.begin());
     }
+    Serial.print("prevNiveis: [");
+    for (size_t i = 0; i < prevNiveis.size(); i++) {
+      Serial.print(prevNiveis[i]);
+      if (i != prevNiveis.size() - 1) {
+        Serial.print(", ");
+      }
+    }
+    Serial.println("]");
     vTaskDelay(pdMS_TO_TICKS(PERIOD_PREV));
   }
 }
@@ -139,6 +164,12 @@ void sendNivel(void *pvParameters){
     for (int id : ids) {
       webSocket.sendTXT(id, json);
     }
+    if(ids.empty()) {
+      digitalWrite(LED_ESP, LOW);
+    }
+    else {
+      digitalWrite(LED_ESP, HIGH);
+    }
     vTaskDelay(pdMS_TO_TICKS(PERIOD_NIV));
   }
 }
@@ -147,6 +178,8 @@ void sendNivel(void *pvParameters){
 
 void setup() {
   Serial.begin(115200);
+  pinMode(LED_ESP, OUTPUT);
+  digitalWrite(LED_ESP, HIGH);
   pinMode(ECHO_PIN, INPUT);
   pinMode(TRIG_PIN, OUTPUT);
   pinMode(BUZZER_PIN, OUTPUT);
@@ -159,6 +192,7 @@ void setup() {
   xTaskCreatePinnedToCore(sendNivel, "Nivel", 10000, NULL, 1, &SendNivelTaskHandle, 0);
   xTaskCreatePinnedToCore(ControleTaskFunction, "Controle", 10000, NULL, 2, &ControleTask, 1);
   xTaskCreatePinnedToCore(setBuzzerIntermittent, "Buzzer", 10000, NULL, 1, &BuzzerTaskHandle, 1);
+  xTaskCreatePinnedToCore(sendVariacao, "Variacao", 10000, NULL, 2, &VariacaoTaskHandle, 1);
   WiFi.softAP(SSID, PASSWORD);
   if (!MDNS.begin("sime"))
   {

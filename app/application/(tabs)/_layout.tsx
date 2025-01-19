@@ -59,7 +59,7 @@ export default function TabLayout() {
 
   function onMessageAction(data: MessagePayload) {
     if ('conectado' in data) {
-      setSystem({ conectado: true, isPlaying: true });
+      setSystem({ conectado: true });
     }
     if ('prevNiveis' in data) {
       const now = moment();
